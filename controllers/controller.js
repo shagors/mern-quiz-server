@@ -1,5 +1,6 @@
 import Questions from "../models/questionSchema.js";
 import Results from "../models/resultSchema.js";
+import questions, { answers } from '../database/data.js';
 
 //** get all questions */
 export const getQuestions = async (re, res) => {
@@ -14,7 +15,7 @@ export const getQuestions = async (re, res) => {
 //** insert all questions */ 
 export const insertQuestions = async (req, res) => {
     try {
-        const q = Questions.insertMany({ questions : [0], answers : [1] }, (err, data) => {
+        const q = Questions.insertMany({ questions, answers }, (err, data) => {
             res.json({msg : "Data save successfully....!"});    
         });
     } catch (error) {
@@ -24,7 +25,12 @@ export const insertQuestions = async (req, res) => {
 
 //** Delete request */
 export const dropQuestions = async (req, res) => {
-    res.json("Questions api delete request");
+    try {
+        await Questions.deleteMany();
+        res.json({ msg : "Questions Deleted Successfully" });
+    } catch (error) {
+        res.json({ error });
+    }
 }
 
 //** get all result */
